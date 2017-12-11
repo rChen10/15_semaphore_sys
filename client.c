@@ -36,10 +36,6 @@ int main(){
   printf("%s", output);
   free(output);
   lseek(fd, SEEK_END, 0);
-
-  //detaching shared memory
-  shmdt(shmp);
-
   
   printf("Please write your next line:\n");
   char *input = (char *) calloc(500, sizeof(char));
@@ -47,7 +43,16 @@ int main(){
 
   write(fd, input, 500);
 
+  
+  //altering shared memory
+  //printf("shmp\n");
+  *shmp = strlen(input);
+  
+  //detaching shared memory
+  //printf("det\n");
+  shmdt(shmp);
+
+  //printf("sem\n");
   sem_data.sem_op = 1;
   semop(sem_id, &sem_data, 1);
-  
 }
